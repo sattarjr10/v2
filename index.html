@@ -1,87 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Viewer — Multi Proxy Configs (Optimized)</title>
+<title>کانفیگ‌ها (بدون VMess) — Optimized</title>
 <style>
-  :root{
-    --bg:#0b1220; --card:#0f1724; --muted:#9aa6b2; --accent:#38bdf8; --accent-2:#7c3aed;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Tahoma, "IRANSans", Arial; background:linear-gradient(180deg,var(--bg),#071021); color:#e6eef6}
-  .wrap{max-width:1200px;margin:18px auto;padding:18px}
-  header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
-  header .left{display:flex;gap:8px;align-items:center}
-  select{background:#0c1624;border:1px solid rgba(255,255,255,0.03);color:#e6eef6;padding:8px;border-radius:8px}
-  button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#041025;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
-  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-  .stat{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;min-width:120px;text-align:center}
-  .stat .n{font-weight:700;color:var(--accent);font-size:1.2rem}
-  #configs {display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-  .card{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:10px;min-height:110px}
-  .protocol-badge{position:absolute;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
-  .card .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .card h4{margin:0;font-size:1rem;color:#fff}
-  .meta{color:var(--muted);font-size:13px}
-  .actions{display:flex;gap:8px;margin-top:auto}
-  .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
-  .btn.copy{background:#1f2937;color:#e6eef6}
-  .btn.open{background:linear-gradient(90deg,#10b981,#06b6d4);color:#021124}
-  .pagination{display:flex;gap:6px;justify-content:center;margin:18px 0;flex-wrap:wrap}
-  .pg{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:7px 10px;border-radius:8px;cursor:pointer}
-  .pg.active{background:var(--accent-2);color:#fff;border-color:transparent}
-  .small{font-size:12px;color:var(--muted)}
-  .loading{padding:30px;text-align:center;color:var(--muted)}
-  @media (max-width:640px){header{flex-direction:column;align-items:stretch}}
+:root{
+  --bg:#0b1220; --card:#0f1724; --muted:#9aa6b2; --accent:#38bdf8; --accent2:#7c3aed;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma, "IRANSans", Arial; background:linear-gradient(180deg,var(--bg),#071021); color:#e6eef6}
+.container{max-width:1200px;margin:18px auto;padding:16px}
+.header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input[type=search]{background:#0c1624;border:1px solid rgba(255,255,255,0.03);color:#e6eef6;padding:8px;border-radius:8px}
+button.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#041025;padding:8px 12px;border-radius:8px;cursor:pointer}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.stat{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;min-width:120px;text-align:center}
+.stat .n{font-weight:700;color:var(--accent);font-size:1.1rem}
+#configs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--card);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:8px;min-height:120px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.title{font-weight:700;color:#fff}
+.badge{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.badge-vless{background:rgba(59,130,246,0.18);color:#3b82f6}
+.badge-trojan{background:rgba(6,182,212,0.12);color:#06b6d4}
+.badge-hysteria{background:rgba(236,72,153,0.12);color:#ec4899}
+.badge-wg{background:rgba(34,197,94,0.12);color:#22c55e}
+.badge-ss{background:rgba(249,115,22,0.12);color:#f97316}
+.badge-tuic{background:rgba(59,130,246,0.12);color:#60a5fa}
+.meta{color:var(--muted);font-size:13px}
+.actions{display:flex;gap:8px;margin-top:auto}
+.btn{padding:7px 10px;border-radius:8px;border:none;cursor:pointer;background:#1f2937;color:#e6eef6}
+.btn.flat{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+.pagination{display:flex;gap:6px;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.page-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer}
+.page-btn.active{background:var(--accent2);color:#fff;border-color:transparent}
+.loading{padding:30px;text-align:center;color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
+.progress{height:8px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden}
+.progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%}
+@media(max-width:720px){
+  .head{flex-direction:column;align-items:flex-start;gap:6px}
+}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="left">
-        <label class="small">پروتکل:</label>
-        <select id="protocolFilter">
-          <option value="all">همه</option>
-          <option value="vmess">VMess</option>
-          <option value="vless">VLESS</option>
-          <option value="trojan">Trojan</option>
-          <option value="hysteria">Hysteria</option>
-          <option value="wireguard">WireGuard</option>
-          <option value="shadowsocks">Shadowsocks</option>
-          <option value="tuic">Tuic</option>
-        </select>
-
-        <label class="small" style="margin-right:12px">کشور:</label>
-        <select id="countryFilter"><option value="all">همه کشورها</option></select>
-      </div>
-
-      <div>
-        <button id="btnReload" class="primary">🔄 بروزرسانی</button>
-      </div>
-    </header>
-
-    <div class="stats" id="statsBar">
-      <div class="stat"><div class="n" id="totalN">0</div><div class="small">کل کانفیگ‌ها</div></div>
-      <div class="stat"><div class="n" id="vmessN">0</div><div class="small">VMess</div></div>
-      <div class="stat"><div class="n" id="vlessN">0</div><div class="small">VLESS</div></div>
-      <div class="stat"><div class="n" id="trojanN">0</div><div class="small">Trojan</div></div>
-      <div class="stat"><div class="n" id="hysteriaN">0</div><div class="small">Hysteria</div></div>
-      <div class="stat"><div class="n" id="wgN">0</div><div class="small">WireGuard</div></div>
-      <div class="stat"><div class="n" id="ssN">0</div><div class="small">Shadowsocks</div></div>
-      <div style="margin-left:auto"><span class="small">کشورهای کش‌شده:</span> <span id="cacheInfo" class="small" style="margin-right:8px;color:#9ae6ff">—</span></div>
+<div class="container">
+  <div class="header">
+    <div>
+      <h2 style="margin:0">کانفیگ‌ها — نسخه بهینه (بدون VMess)</h2>
+      <div class="small">پروتکل‌ها: VLESS, Trojan, Hysteria, Shadowsocks, WireGuard, Tuic</div>
     </div>
 
-    <div id="configs">
-      <div class="loading" id="loader">⏳ در حال دریافت و پردازش کانفیگ‌ها ...</div>
-    </div>
+    <div class="controls">
+      <select id="protocolFilter">
+        <option value="all">همه پروتکل‌ها</option>
+        <option value="vless">VLESS</option>
+        <option value="trojan">Trojan</option>
+        <option value="hysteria">Hysteria</option>
+        <option value="wireguard">WireGuard</option>
+        <option value="shadowsocks">Shadowsocks</option>
+        <option value="tuic">Tuic</option>
+      </select>
 
-    <div class="pagination" id="pagination"></div>
+      <select id="countryFilter"><option value="all">همه کشورها</option></select>
+
+      <input type="search" id="q" placeholder="جستجو (آدرس، اسم،...)">
+
+      <button id="reload" class="primary">🔄 بروزرسانی</button>
+    </div>
   </div>
 
+  <div class="stats" id="stats">
+    <div class="stat"><div class="n" id="totalN">0</div><div class="small">کل کانفیگ‌ها</div></div>
+    <div class="stat"><div class="n" id="vlessN">0</div><div class="small">VLESS</div></div>
+    <div class="stat"><div class="n" id="trojanN">0</div><div class="small">Trojan</div></div>
+    <div class="stat"><div class="n" id="hysteriaN">0</div><div class="small">Hysteria</div></div>
+    <div class="stat"><div class="n" id="wgN">0</div><div class="small">WireGuard</div></div>
+    <div class="stat"><div class="n" id="ssN">0</div><div class="small">Shadowsocks</div></div>
+    <div style="margin-left:auto;text-align:left">
+      <div class="small">Geo cache: <span id="geoCount">0</span></div>
+      <div class="small">DNS cache: <span id="dnsCount">0</span></div>
+    </div>
+  </div>
+
+  <div id="progressWrap" style="margin-bottom:12px;display:none">
+    <div class="progress"><i id="progressBar"></i></div>
+    <div class="small" id="progressText" style="margin-top:6px"></div>
+  </div>
+
+  <div id="configs"><div class="loading">⏳ آماده‌سازی...</div></div>
+  <div class="pagination" id="pagination"></div>
+</div>
+
 <script>
-/* ======== تنظیمات ======== */
-const CONFIG_URLS = [
+/* ========== تنظیمات ========== */
+const SOURCES = [
   "https://raw.githubusercontent.com/miladtahanian/multi-proxy-config-fetcher/refs/heads/main/configs/proxy_configs.txt",
   "https://raw.githubusercontent.com/miladtahanian/V2RayCFGDumper/refs/heads/main/config.txt",
   "https://raw.githubusercontent.com/10ium/V2Hub3/refs/heads/main/merged",
@@ -110,83 +125,70 @@ const CONFIG_URLS = [
 ];
 
 const PAGE_SIZE = 20;
-const DNS_CACHE_KEY = "dnsCacheV2";
-const GEO_CACHE_KEY = "geoCacheV2";
+const DNS_CACHE_KEY = "cfg_dns_v1";
+const GEO_CACHE_KEY = "cfg_geo_v1";
 
-/* ======== کش‌های محلی ======== */
+/* ========== کش‌ها ========== */
 let dnsCache = JSON.parse(localStorage.getItem(DNS_CACHE_KEY) || "{}");
 let geoCache = JSON.parse(localStorage.getItem(GEO_CACHE_KEY) || "{}");
 
-/* ======== داده‌های داخلی ======== */
-let configs = []; // هر کانفیگ: {id, protocol, raw, host, ip, country}
+/* ========== وضعیت داخلی ========== */
+let configs = []; // {id, protocol, raw, host, ip, country, latency}
 let currentPage = 1;
+let totalProcessed = 0;
 
-/* ======== کمک-توابع ======== */
+/* ========== توابع کمکی ========== */
 
-// split entries into blocks (handle multi-line wg blocks)
-function splitEntries(text){
-  // جداکننده بلوک: حداقل یک خط خالی
-  return text.split(/\r?\n\s*\r?\n+/).map(s=>s.trim()).filter(s=>s.length>0);
+function splitBlocks(text){
+  return text.split(/\r?\n\s*\r?\n+/).map(s=>s.trim()).filter(Boolean);
 }
 
-// robust host extraction
-function extractHostFromText(s){
-  // 1) vmess://base64json
-  let m = s.match(/vmess:\/\/([A-Za-z0-9+\/=]+)/i);
-  if(m){
-    try{
-      const json = atob(m[1]);
-      const obj = JSON.parse(json);
-      if(obj.add) return obj.add;
-      if(obj.host) return obj.host;
-    }catch(e){}
-  }
-  // 2) vless://uuid@host:port or trojan://pwd@host:port
-  m = s.match(/@([\w\.-]+):\d+/);
-  if(m) return m[1];
-  // 3) hysteria may include host after @ or in params
-  m = s.match(/hysteria:\/\/[^\s@]*@?([\w\.-]+):\d+/i);
-  if(m) return m[1];
-  // 4) wg Endpoint= or Endpoint =
-  m = s.match(/Endpoint\s*=\s*([\w\.-]+):\d+/i);
-  if(m) return m[1];
-  // 5) try to find first IPv4
-  m = s.match(/((?:\d{1,3}\.){3}\d{1,3})/);
-  if(m) return m[1];
-  // 6) find domain-like token
-  m = s.match(/([a-z0-9\.-]+\.[a-z]{2,})/i);
-  if(m) return m[1];
-  return null;
-}
-
-// detect protocol for a block/line (includes wireguard blocks)
 function detectProtocol(entry){
   const s = entry.toLowerCase();
-  if(/vmess:\/\//.test(s)) return "vmess";
   if(/vless:\/\//.test(s)) return "vless";
   if(/trojan:\/\//.test(s)) return "trojan";
   if(/hysteria2?:\/\//.test(s)) return "hysteria";
-  if(/(^|\n)\[interface\]/i.test(entry) || /wg:\/\//i.test(entry) || /privatekey=/i.test(s) && /endpoint=/i.test(s)) return "wireguard";
+  if(/(^|\n)\[interface\]/i.test(entry) || /wg:\/\//i.test(s) || (/privatekey=/i.test(s) && /endpoint=/i.test(s))) return "wireguard";
   if(/(^|\s)ss:\/\//.test(s) || /shadowsocks/i.test(s)) return "shadowsocks";
   if(/tuic:\/\//.test(s)) return "tuic";
   return null;
 }
 
-// DNS-over-HTTPS via Google to resolve domain -> IP
-async function resolveDNS(host){
+function extractHost(entry){
+  // vmess removed; we handle others
+  // common patterns: @host:port or Endpoint = host:port or host:port
+  let m = entry.match(/@([\w\.-]+):\d+/);
+  if(m) return m[1];
+  m = entry.match(/Endpoint\s*=\s*([\w\.-]+):\d+/i);
+  if(m) return m[1];
+  m = entry.match(/host=([\w\.-]+)/i);
+  if(m) return m[1];
+  m = entry.match(/server=([\w\.-]+)/i);
+  if(m) return m[1];
+  // try find first ipv4
+  m = entry.match(/((?:\d{1,3}\.){3}\d{1,3})/);
+  if(m) return m[1];
+  // try domain-like token
+  m = entry.match(/([a-z0-9\.-]+\.[a-z]{2,})/i);
+  if(m) return m[1];
+  return null;
+}
+
+async function dohResolve(host){
   if(!host) return null;
-  if(/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) return host; // already IP
+  if(/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) return host;
   if(dnsCache[host]) return dnsCache[host];
   try{
-    const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(host)}&type=A`);
-    if(!res.ok) throw new Error("dns failed");
-    const j = await res.json();
+    const r = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(host)}&type=A`);
+    if(!r.ok) throw new Error("DNS fail");
+    const j = await r.json();
     if(j.Answer && j.Answer.length){
-      const ans = j.Answer.find(a=>/\d+\.\d+\.\d+\.\d+/.test(a.data));
-      if(ans && ans.data){
-        dnsCache[host] = ans.data;
+      const a = j.Answer.find(x=>/\d+\.\d+\.\d+\.\d+/.test(x.data));
+      if(a && a.data){
+        dnsCache[host] = a.data;
         localStorage.setItem(DNS_CACHE_KEY, JSON.stringify(dnsCache));
-        return ans.data;
+        updateCacheCounts();
+        return a.data;
       }
     }
   }catch(e){
@@ -195,248 +197,256 @@ async function resolveDNS(host){
   return null;
 }
 
-// get country for an IP (cached)
-async function getCountryForIP(ip){
+async function geoForIp(ip){
   if(!ip) return "نامشخص";
   if(geoCache[ip]) return geoCache[ip];
   try{
-    // use ipapi.co simple text endpoint to reduce JSON parse
-    const res = await fetch(`https://ipapi.co/${ip}/country_name/`);
-    if(res.ok){
-      const country = (await res.text()).trim();
-      geoCache[ip] = country || "نامشخص";
+    // small endpoint returning country_name
+    const r = await fetch(`https://ipapi.co/${ip}/country_name/`);
+    if(r.ok){
+      const c = (await r.text()).trim() || "نامشخص";
+      geoCache[ip] = c;
       localStorage.setItem(GEO_CACHE_KEY, JSON.stringify(geoCache));
-      return geoCache[ip];
+      updateCacheCounts();
+      return c;
     }
   }catch(e){}
   return "نامشخص";
 }
 
-// concurrency batch processor
-async function processInBatches(items, worker, concurrency=5){
-  const results = [];
-  let idx = 0;
-  async function next(){
-    if(idx >= items.length) return;
-    const i = idx++;
-    try{ results[i] = await worker(items[i], i); }catch(e){ results[i] = null; }
-    return next();
+// measure simple HEAD latency (no-cors); timeout applied
+async function measureLatency(host, timeout=2500){
+  if(!host) return null;
+  const url = `https://${host}/`;
+  const start = performance.now();
+  try{
+    const controller = new AbortController();
+    const t = setTimeout(()=>controller.abort(), timeout);
+    await fetch(url, {method:'HEAD', mode:'no-cors', signal: controller.signal});
+    clearTimeout(t);
+    const ms = Math.max(0, Math.round(performance.now() - start));
+    return ms + " ms";
+  }catch(e){
+    return "timeout";
   }
-  const runners = [];
-  for(let i=0;i<concurrency;i++) runners.push(next());
-  await Promise.all(runners);
-  return results;
 }
 
-/* ======== parsing main ======== */
+function updateCacheCounts(){
+  document.getElementById('geoCount').textContent = Object.keys(geoCache).length;
+  document.getElementById('dnsCount').textContent = Object.keys(dnsCache).length;
+}
 
-function parseAllTextToConfigs(text){
-  const entries = splitEntries(text);
+/* batch processor */
+async function batchProcess(items, worker, concurrency=4){
+  const res = [];
+  let i = 0;
+  async function next(){
+    while(i < items.length){
+      const idx = i++;
+      try{ res[idx] = await worker(items[idx], idx); }catch(e){ res[idx] = null; }
+    }
+  }
+  const runners = [];
+  for(let k=0;k<concurrency;k++) runners.push(next());
+  await Promise.all(runners);
+  return res;
+}
+
+/* ========== parsing and loading ========== */
+
+function parseTextToConfigs(text){
+  const blocks = splitBlocks(text);
   const out = [];
-  let id = 1;
-  for(const e of entries){
-    // within entry, there can be multiple single-line links too; extract those first
-    const linkMatches = [];
-    const singleRegexes = [
-      /vmess:\/\/[^\s'"]+/gi,
+  let id = configs.length ? configs.length+1 : 1;
+  for(const b of blocks){
+    // find inline single-line links first
+    const inlineRegexes = [
       /vless:\/\/[^\s'"]+/gi,
       /trojan:\/\/[^\s'"]+/gi,
       /hysteria2?:\/\/[^\s'"]+/gi,
+      /ss:\/\/[^\s'"]+/gi,
       /wg:\/\/[^\s'"]+/gi,
-      /tuic:\/\/[^\s'"]+/gi,
-      /ss:\/\/[^\s'"]+/gi
+      /tuic:\/\/[^\s'"]+/gi
     ];
-    for(const r of singleRegexes){
+    let foundInline = false;
+    for(const rx of inlineRegexes){
       let m;
-      while((m = r.exec(e)) !== null){
-        linkMatches.push(m[0]);
+      while((m = rx.exec(b)) !== null){
+        const entry = m[0];
+        const proto = detectProtocol(entry) || 'unknown';
+        const host = extractHost(entry);
+        out.push({id: id++, protocol: proto, raw: entry, host, ip: null, country: "در حال دریافت...", latency: null});
+        foundInline = true;
       }
     }
-
-    // push single-line links as separate configs
-    for(const lm of linkMatches){
-      const proto = detectProtocol(lm) || 'unknown';
-      out.push({ id: id++, protocol: proto, raw: lm, host: extractHostFromText(lm), ip: null, country: "در حال دریافت..." });
-    }
-
-    // if no single-line links found inside entry, treat whole entry as block (for wg multi-line etc)
-    if(linkMatches.length === 0){
-      const proto = detectProtocol(e) || 'unknown';
-      out.push({ id: id++, protocol: proto, raw: e, host: extractHostFromText(e), ip: null, country: "در حال دریافت..." });
+    if(!foundInline){
+      // treat whole block (useful for wg multi-line)
+      const proto = detectProtocol(b);
+      if(proto){
+        const host = extractHost(b);
+        out.push({id: id++, protocol: proto, raw: b, host, ip: null, country: "در حال دریافت...", latency: null});
+      }
     }
   }
   return out;
 }
 
-/* ======== نمایش UI ======== */
+/* ========== render UI ========== */
 
-function updateStatsUI(){
+function updateStats(){
   document.getElementById('totalN').textContent = configs.length;
-  document.getElementById('vmessN').textContent = configs.filter(c=>c.protocol==='vmess').length;
   document.getElementById('vlessN').textContent = configs.filter(c=>c.protocol==='vless').length;
   document.getElementById('trojanN').textContent = configs.filter(c=>c.protocol==='trojan').length;
   document.getElementById('hysteriaN').textContent = configs.filter(c=>c.protocol==='hysteria').length;
   document.getElementById('wgN').textContent = configs.filter(c=>c.protocol==='wireguard').length;
   document.getElementById('ssN').textContent = configs.filter(c=>c.protocol==='shadowsocks').length;
-  document.getElementById('cacheInfo').textContent = `${Object.keys(geoCache).length} geo, ${Object.keys(dnsCache).length} dns`;
+  updateCacheCounts();
 }
 
-function renderPage(){
+function render(){
   const prot = document.getElementById('protocolFilter').value;
   const country = document.getElementById('countryFilter').value;
-  let filtered = configs.filter(c => (prot==='all' || c.protocol===prot) && (country==='all' || c.country===country));
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  let filtered = configs.filter(c => (prot==='all' || c.protocol===prot));
+  if(country!=='all') filtered = filtered.filter(c=> (c.country || '').toLowerCase() === country.toLowerCase());
+  if(q) filtered = filtered.filter(c => (c.raw||'').toLowerCase().includes(q) || (c.host||'').toLowerCase().includes(q));
+
   const total = filtered.length;
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   if(currentPage > pages) currentPage = 1;
-  const start = (currentPage - 1) * PAGE_SIZE;
-  const pageItems = filtered.slice(start, start + PAGE_SIZE);
+  const start = (currentPage-1)*PAGE_SIZE;
+  const pageItems = filtered.slice(start, start+PAGE_SIZE);
 
-  const container = document.getElementById('configs');
-  container.innerHTML = "";
+  const wrap = document.getElementById('configs');
+  wrap.innerHTML = '';
   if(pageItems.length === 0){
-    container.innerHTML = `<div class="loading">هیچ کانفیگی برای نمایش وجود ندارد</div>`;
+    wrap.innerHTML = `<div class="loading">هیچ کانفیگی برای نمایش وجود ندارد</div>`;
   } else {
     for(const c of pageItems){
-      const card = document.createElement('div');
-      card.className = 'card';
+      const card = document.createElement('div'); card.className = 'card';
       const head = document.createElement('div'); head.className='head';
-      const title = document.createElement('h4'); title.textContent = (c.protocol || 'unknown').toUpperCase();
-      const small = document.createElement('div'); small.className='small meta'; small.textContent = `IP/Host: ${c.host || 'نامشخص'}`;
-      head.appendChild(title);
-      head.appendChild(small);
-      const rawP = document.createElement('div'); rawP.className='meta'; rawP.style.whiteSpace='pre-wrap';
-      rawP.textContent = c.raw.length > 300 ? c.raw.substring(0,300) + ' ...' : c.raw;
-      const countryP = document.createElement('div'); countryP.className='meta'; countryP.textContent = `کشور: ${c.country || 'نامشخص'}`;
-      countryP.setAttribute('data-id','country-'+c.id);
+      const t = document.createElement('div'); t.className='title'; t.textContent = (c.protocol||'').toUpperCase();
+      const badge = document.createElement('div'); badge.className='badge badge-'+(c.protocol==='vless'?'vless':c.protocol==='trojan'?'trojan':c.protocol==='hysteria'?'hysteria':c.protocol==='wireguard'?'wg':c.protocol==='shadowsocks'?'ss':'tuic');
+      badge.textContent = c.protocol.toUpperCase();
+      head.appendChild(t); head.appendChild(badge);
+      const rawDiv = document.createElement('div'); rawDiv.className='meta'; rawDiv.style.whiteSpace='pre-wrap';
+      rawDiv.textContent = c.raw.length>250?c.raw.slice(0,250)+' ...':c.raw;
+      const hostDiv = document.createElement('div'); hostDiv.className='meta small'; hostDiv.textContent = `آدرس: ${c.host || 'نامشخص'}`;
+      const countryDiv = document.createElement('div'); countryDiv.className='meta small'; countryDiv.id = 'ct-'+c.id; countryDiv.textContent = `کشور: ${c.country||'در حال دریافت...'}`;
+      const latDiv = document.createElement('div'); latDiv.className='meta small'; latDiv.id = 'lat-'+c.id; latDiv.textContent = `تاخیر: ${c.latency || '-'}`;
 
       const actions = document.createElement('div'); actions.className='actions';
-      const btnCopy = document.createElement('button'); btnCopy.className='btn copy'; btnCopy.textContent='کپی';
-      btnCopy.onclick = ()=>{ navigator.clipboard.writeText(c.raw).then(()=>notify('کپی شد ✅')).catch(()=>notify('خطا در کپی ⚠️')) };
-      actions.appendChild(btnCopy);
+      const btnCopy = document.createElement('button'); btnCopy.className='btn'; btnCopy.textContent='کپی'; btnCopy.onclick = ()=>{navigator.clipboard.writeText(c.raw).then(()=>notify('کپی شد ✅'))};
+      const btnPing = document.createElement('button'); btnPing.className='btn flat'; btnPing.textContent='تست تاخیر'; btnPing.onclick = async ()=>{ btnPing.disabled=true; btnPing.textContent='در حال تست...'; const lat = await measureLatency(c.host); c.latency = lat; document.getElementById('lat-'+c.id).textContent = `تاخیر: ${lat}`; btnPing.disabled=false; btnPing.textContent='تست تاخیر'; };
+      actions.appendChild(btnCopy); actions.appendChild(btnPing);
 
-      const btnOpen = document.createElement('button'); btnOpen.className='btn open'; btnOpen.textContent='کپی لینک';
-      btnOpen.onclick = ()=>{ navigator.clipboard.writeText(c.raw).then(()=>notify('لینک/بلوک کپی شد ✅')) };
-      actions.appendChild(btnOpen);
-
-      card.appendChild(head);
-      card.appendChild(rawP);
-      card.appendChild(countryP);
-      card.appendChild(actions);
-      container.appendChild(card);
+      card.appendChild(head); card.appendChild(rawDiv); card.appendChild(hostDiv); card.appendChild(countryDiv); card.appendChild(latDiv); card.appendChild(actions);
+      wrap.appendChild(card);
     }
   }
 
   // pagination
   const pag = document.getElementById('pagination');
   pag.innerHTML = '';
-  const pagesToRender = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  if(pagesToRender > 1){
-    for(let i=1;i<=pagesToRender;i++){
-      const b = document.createElement('button'); b.className='pg' + (i===currentPage ? ' active' : '');
-      b.textContent = i;
-      b.onclick = ()=>{ currentPage = i; renderPage(); };
-      pag.appendChild(b);
-    }
+  if(total <= PAGE_SIZE) return;
+  for(let i=1;i<=Math.ceil(total/PAGE_SIZE);i++){
+    const b = document.createElement('button'); b.className='page-btn' + (i===currentPage?' active':''); b.textContent = i;
+    b.onclick = ()=>{ currentPage = i; render(); };
+    pag.appendChild(b);
   }
-  updateStatsUI();
+
+  updateStats();
 }
 
-/* ======== GeoIP & DNS flow ======== */
+/* ========== main flow: batched fetch, parse, fill geo ========== */
 
-// main function to update host/ip/country for configs (batched)
-async function fillCountriesForAll(){
-  // collect unique hosts (not null)
-  const hosts = Array.from(new Set(configs.map(c=>c.host).filter(h=>h && h!=='null')));
-  // process in batches: resolve DNS then GeoIP
-  await processInBatches(hosts, async (host)=>{
-    // resolve DNS if not IP
+async function loadAll(){
+  // UI prepare
+  document.getElementById('configs').innerHTML = '<div class="loading">⏳ دانلود منابع...</div>';
+  currentPage = 1; configs = [];
+
+  // fetch sources in small parallel batches (to avoid too many concurrent)
+  const batchSize = 4;
+  const progressWrap = document.getElementById('progressWrap');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '0%';
+  progressText.textContent = 'شروع دانلود...';
+
+  for(let i=0;i<SOURCES.length;i+=batchSize){
+    const chunk = SOURCES.slice(i,i+batchSize);
+    // fetch chunk in parallel
+    const promises = chunk.map(u => fetch(u).then(r => r.ok ? r.text() : '').catch(()=>''));
+    const results = await Promise.all(promises);
+    // parse each result
+    for(const txt of results){
+      if(!txt) continue;
+      const parsed = parseTextToConfigs(txt);
+      for(const p of parsed) configs.push(p);
+    }
+    // update progress
+    const pct = Math.min(100, Math.round((i+batchSize)/SOURCES.length*100));
+    progressBar.style.width = pct + '%';
+    progressText.textContent = `بارگذاری منابع: ${Math.min(100,pct)}%`;
+    await new Promise(r=>setTimeout(r,200)); // small pause to keep UI responsive
+  }
+
+  // initial render (without geo)
+  render();
+
+  // fill hosts -> ip -> country in background (batched)
+  // collect unique hosts
+  const hosts = Array.from(new Set(configs.map(c=>c.host).filter(Boolean)));
+  progressText.textContent = `استخراج لوکیشن برای ${hosts.length} هاست...`;
+  // process hosts in batches with concurrency 5
+  await batchProcess(hosts, async (host, idx)=>{
+    // resolve IP
     let ip = null;
     if(/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) ip = host;
-    else ip = await resolveDNS(host);
-    if(!ip){
-      // if cannot resolve, set country for items with this host to نامشخص
-      configs.filter(c=>c.host===host).forEach(cc=>{ cc.ip = null; cc.country = 'نامشخص'; updateCardCountry(cc); });
-      return;
-    }
-    // get country
-    const country = await getCountryForIP(ip);
-    // update matching configs
+    else ip = await dohResolve(host);
+    // get geo
+    let country = "نامشخص";
+    if(ip) country = await geoForIp(ip);
+    // update configs with this host
     configs.filter(c=>c.host===host).forEach(cc=>{
       cc.ip = ip; cc.country = country;
-      updateCardCountry(cc);
+      // update UI field if visible
+      const el = document.getElementById('ct-'+cc.id);
+      if(el) el.textContent = `کشور: ${country}`;
     });
-    // small delay to avoid hammering API too fast
-    await new Promise(r=>setTimeout(r, 150));
-  }, 6); // concurrency 6
+  }, 5);
 
-  // after fill, refresh country filter options
+  // hide progress
+  progressWrap.style.display = 'none';
+  // populate country filter
   populateCountryFilter();
-  updateStatsUI();
-}
-
-// update single card country text (if visible)
-function updateCardCountry(cfg){
-  const el = document.querySelector(`[data-id="country-${cfg.id}"]`);
-  if(el) el.textContent = `کشور: ${cfg.country || 'نامشخص'}`;
-}
-
-/* ======== utility UI ======== */
-
-function notify(text){ 
-  const n = document.getElementById('notification');
-  if(!n){ // create
-    const el = document.createElement('div');
-    el.id='notification'; el.style.position='fixed'; el.style.bottom='18px'; el.style.left='50%';
-    el.style.transform='translateX(-50%)'; el.style.background='rgba(0,0,0,0.6)'; el.style.color='#fff';
-    el.style.padding='10px 14px'; el.style.borderRadius='8px'; document.body.appendChild(el);
-    el.textContent = text;
-    setTimeout(()=>el.remove(),2800);
-  } else {
-    n.textContent = text;
-    setTimeout(()=>n.remove(),2800);
-  }
+  render();
+  notify('بارگذاری کامل شد ✅');
 }
 
 function populateCountryFilter(){
+  const set = new Set(configs.map(c=>c.country).filter(x=>x && x!=="نامشخص" && x!=="در حال دریافت..."));
+  const arr = Array.from(set).sort();
   const sel = document.getElementById('countryFilter');
-  const set = new Set(configs.map(c=>c.country).filter(Boolean));
-  const arr = Array.from(set).filter(x=>x && x !== 'در حال دریافت...' && x !== 'نامشخص').sort();
   sel.innerHTML = '<option value="all">همه کشورها</option>';
   arr.forEach(a=>{
-    const o = document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o);
+    const o = document.createElement('option'); o.value = a; o.textContent = a; sel.appendChild(o);
   });
 }
 
-/* ======== main loader ======== */
-async function loadAllConfigs(){
-  const container = document.getElementById('configs');
-  document.getElementById('loader')?.remove();
-  container.innerHTML = '<div class="loading">⏳ دانلود منابع ...</div>';
-  // fetch all texts in parallel (silently ignore failures)
-  const fetches = CONFIG_URLS.map(u => fetch(u).then(r => r.ok ? r.text() : '').catch(()=>''));
-  const results = await Promise.all(fetches);
-  const bigText = results.join('\n\n');
-  // parse into configs
-  configs = parseAllTextToConfigs(bigText);
-  // set placeholders and get initial host field already set by parser
-  currentPage = 1;
-  renderPage();
-  // fill countries async in background (batches, caching)
-  fillCountriesForAll();
-}
+/* ========== small UI helpers ========== */
+function notify(txt){ const d = document.createElement('div'); d.className='small'; d.style.position='fixed'; d.style.bottom='18px'; d.style.left='50%'; d.style.transform='translateX(-50%)'; d.style.background='rgba(3,7,18,0.8)'; d.style.padding='8px 12px'; d.style.borderRadius='8px'; d.style.zIndex=9999; d.textContent = txt; document.body.appendChild(d); setTimeout(()=>d.remove(),2200); }
 
-/* ======== events ======== */
-document.getElementById('btnReload').addEventListener('click', async ()=>{
-  // reset caches? keep caches but reload
-  document.getElementById('configs').innerHTML = '<div class="loading">⏳ در حال بروزرسانی ...</div>';
-  await loadAllConfigs();
-});
+/* ========== events ========= */
+document.getElementById('reload').addEventListener('click', ()=>{ loadAll(); });
+document.getElementById('protocolFilter').addEventListener('change', ()=>{ currentPage=1; render(); });
+document.getElementById('countryFilter').addEventListener('change', ()=>{ currentPage=1; render(); });
+document.getElementById('q').addEventListener('input', ()=>{ currentPage=1; render(); });
 
-document.getElementById('protocolFilter').addEventListener('change', ()=>{ currentPage = 1; renderPage(); });
-document.getElementById('countryFilter').addEventListener('change', ()=>{ currentPage = 1; renderPage(); });
-
-/* ======== startup ======== */
-loadAllConfigs();
+/* ========== startup ========= */
+updateCacheCounts();
+loadAll();
 
 </script>
 </body>
