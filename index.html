@@ -1,320 +1,443 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>کانفیگ‌های V2Ray و پروکسی</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Viewer — Multi Proxy Configs (Optimized)</title>
 <style>
-@font-face {
-    font-family: 'IRANSans';
-    src: url('https://cdn.fontcdn.ir/Font/Persian/IRANSans/IRANSansWeb(FaNum).eot');
-    src: url('https://cdn.fontcdn.ir/Font/Persian/IRANSans/IRANSansWeb(FaNum).eot?#iefix') format('embedded-opentype'),
-         url('https://cdn.fontcdn.ir/Font/Persian/IRANSans/IRANSansWeb(FaNum).woff2') format('woff2'),
-         url('https://cdn.fontcdn.ir/Font/Persian/IRANSans/IRANSansWeb(FaNum).woff') format('woff'),
-         url('https://cdn.fontcdn.ir/Font/Persian/IRANSans/IRANSansWeb(FaNum).ttf') format('truetype');
-    font-weight: normal; font-style: normal; font-display: swap;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-    font-family:'IRANSans',Arial,sans-serif;
-    background:#0a1126;
-    color:#e2e8f0;
-    min-height:100vh;
-    padding:20px;
-}
-.container{
-    max-width:1200px;
-    margin:0 auto;
-}
-.header{
-    text-align:center;
-    margin-bottom:20px;
-}
-.header h1{font-size:2.5rem;color:#fff;margin-bottom:5px;}
-.header p{color:#aaa;}
-.filters{
-    display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;justify-content:center;
-}
-.filters select, .filters button{
-    padding:10px 15px;
-    border-radius:8px;
-    border:none;
-    background:rgba(51,65,85,0.7);
-    color:#e2e8f0;
-    cursor:pointer;
-    border:1px solid rgba(59,130,246,0.3);
-    transition:all 0.3s;
-}
-.filters select:hover, .filters button:hover{
-    background:rgba(59,130,246,0.7);
-}
-.stats{
-    display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;
-}
-.stat-item{
-    background:rgba(51,65,85,0.5);
-    padding:15px;
-    border-radius:8px;
-    text-align:center;
-    min-width:130px;
-    border:1px solid rgba(59,130,246,0.2);
-}
-.stat-item .number{font-size:1.5rem;color:#3b82f6;font-weight:bold;margin-bottom:3px;}
-.configs-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px;}
-.config-card{
-    background:rgba(30,41,59,0.8);
-    padding:15px;
-    border-radius:10px;
-    border:1px solid rgba(59,130,246,0.3);
-    position:relative;
-    transition:all 0.3s;
-}
-.config-card:hover{transform:translateY(-5px);border-color:#8b5cf6;}
-.protocol-badge{
-    position:absolute;
-    top:10px; left:10px;
-    padding:5px 10px;
-    border-radius:5px;
-    font-size:0.8rem;
-    font-weight:bold;
-}
-.protocol-vmess{background:rgba(139,92,246,0.2);color:#8b5cf6;}
-.protocol-vless{background:rgba(59,130,246,0.2);color:#3b82f6;}
-.protocol-trojan{background:rgba(6,182,212,0.2);color:#06b6d4;}
-.protocol-hysteria{background:rgba(236,72,153,0.2);color:#ec4899;}
-.protocol-wireguard{background:rgba(34,197,94,0.2);color:#22c55e;}
-.protocol-shadowsocks{background:rgba(249,115,22,0.2);color:#f97316;}
-.config-info p{margin:5px 0;display:flex;align-items:center;gap:6px;}
-.config-actions{display:flex;gap:10px;margin-top:10px;}
-.config-actions button{
-    flex:1;padding:6px 10px;border:none;border-radius:5px;background:linear-gradient(135deg,#06b6d4 0%,#3b82f6 100%);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all 0.3s;
-}
-.config-actions button:hover{background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 100%);}
-.notification{
-    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(30,41,59,0.9);color:white;padding:12px 20px;border-radius:8px;display:flex;align-items:center;gap:10px;opacity:0;transition:0.3s;z-index:1000;border:1px solid rgba(59,130,246,0.3);
-}
-.notification.show{opacity:1;}
-.pagination{display:flex;justify-content:center;gap:5px;margin:20px 0;}
-.pagination button{padding:5px 10px;background:rgba(51,65,85,0.7);border:none;border-radius:5px;color:#e2e8f0;cursor:pointer;transition:0.3s;}
-.pagination button.active, .pagination button:hover{background:#3b82f6;}
-.loading{text-align:center;padding:40px;color:#3b82f6;}
-.loading i{font-size:2rem;margin-bottom:10px;animation:spin 1s infinite linear;}
-@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+  :root{
+    --bg:#0b1220; --card:#0f1724; --muted:#9aa6b2; --accent:#38bdf8; --accent-2:#7c3aed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Tahoma, "IRANSans", Arial; background:linear-gradient(180deg,var(--bg),#071021); color:#e6eef6}
+  .wrap{max-width:1200px;margin:18px auto;padding:18px}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+  header .left{display:flex;gap:8px;align-items:center}
+  select{background:#0c1624;border:1px solid rgba(255,255,255,0.03);color:#e6eef6;padding:8px;border-radius:8px}
+  button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#041025;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .stat{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;min-width:120px;text-align:center}
+  .stat .n{font-weight:700;color:var(--accent);font-size:1.2rem}
+  #configs {display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .card{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:10px;min-height:110px}
+  .protocol-badge{position:absolute;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+  .card .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card h4{margin:0;font-size:1rem;color:#fff}
+  .meta{color:var(--muted);font-size:13px}
+  .actions{display:flex;gap:8px;margin-top:auto}
+  .btn{padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+  .btn.copy{background:#1f2937;color:#e6eef6}
+  .btn.open{background:linear-gradient(90deg,#10b981,#06b6d4);color:#021124}
+  .pagination{display:flex;gap:6px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+  .pg{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:7px 10px;border-radius:8px;cursor:pointer}
+  .pg.active{background:var(--accent-2);color:#fff;border-color:transparent}
+  .small{font-size:12px;color:var(--muted)}
+  .loading{padding:30px;text-align:center;color:var(--muted)}
+  @media (max-width:640px){header{flex-direction:column;align-items:stretch}}
 </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>کانفیگ‌های V2Ray و پروکسی</h1>
-        <p>جمع‌آوری و دسته‌بندی پروتکل‌ها با لوکیشن و صفحه‌بندی</p>
-    </div>
-
-    <div class="stats">
-        <div class="stat-item"><div class="number" id="totalConfigs">0</div>کل کانفیگ‌ها</div>
-        <div class="stat-item"><div class="number" id="vmessCount">0</div>VMess</div>
-        <div class="stat-item"><div class="number" id="vlessCount">0</div>VLESS</div>
-        <div class="stat-item"><div class="number" id="trojanCount">0</div>Trojan</div>
-        <div class="stat-item"><div class="number" id="hysteriaCount">0</div>Hysteria</div>
-        <div class="stat-item"><div class="number" id="wireguardCount">0</div>WireGuard</div>
-        <div class="stat-item"><div class="number" id="ssCount">0</div>Shadowsocks</div>
-    </div>
-
-    <div class="filters">
+  <div class="wrap">
+    <header>
+      <div class="left">
+        <label class="small">پروتکل:</label>
         <select id="protocolFilter">
-            <option value="all">همه پروتکل‌ها</option>
-            <option value="vmess">VMess</option>
-            <option value="vless">VLESS</option>
-            <option value="trojan">Trojan</option>
-            <option value="hysteria">Hysteria</option>
-            <option value="wireguard">WireGuard</option>
-            <option value="shadowsocks">Shadowsocks</option>
+          <option value="all">همه</option>
+          <option value="vmess">VMess</option>
+          <option value="vless">VLESS</option>
+          <option value="trojan">Trojan</option>
+          <option value="hysteria">Hysteria</option>
+          <option value="wireguard">WireGuard</option>
+          <option value="shadowsocks">Shadowsocks</option>
+          <option value="tuic">Tuic</option>
         </select>
 
-        <select id="countryFilter">
-            <option value="all">همه کشورها</option>
-        </select>
+        <label class="small" style="margin-right:12px">کشور:</label>
+        <select id="countryFilter"><option value="all">همه کشورها</option></select>
+      </div>
 
-        <button onclick="loadConfigs()"><i class="fas fa-sync-alt"></i> بروزرسانی</button>
-        <button onclick="copyAllConfigs()"><i class="fas fa-copy"></i> کپی همه</button>
+      <div>
+        <button id="btnReload" class="primary">🔄 بروزرسانی</button>
+      </div>
+    </header>
+
+    <div class="stats" id="statsBar">
+      <div class="stat"><div class="n" id="totalN">0</div><div class="small">کل کانفیگ‌ها</div></div>
+      <div class="stat"><div class="n" id="vmessN">0</div><div class="small">VMess</div></div>
+      <div class="stat"><div class="n" id="vlessN">0</div><div class="small">VLESS</div></div>
+      <div class="stat"><div class="n" id="trojanN">0</div><div class="small">Trojan</div></div>
+      <div class="stat"><div class="n" id="hysteriaN">0</div><div class="small">Hysteria</div></div>
+      <div class="stat"><div class="n" id="wgN">0</div><div class="small">WireGuard</div></div>
+      <div class="stat"><div class="n" id="ssN">0</div><div class="small">Shadowsocks</div></div>
+      <div style="margin-left:auto"><span class="small">کشورهای کش‌شده:</span> <span id="cacheInfo" class="small" style="margin-right:8px;color:#9ae6ff">—</span></div>
     </div>
 
-    <div id="configsContainer">
-        <div class="loading"><i class="fas fa-spinner"></i><p>در حال دریافت کانفیگ‌ها...</p></div>
+    <div id="configs">
+      <div class="loading" id="loader">⏳ در حال دریافت و پردازش کانفیگ‌ها ...</div>
     </div>
 
     <div class="pagination" id="pagination"></div>
-</div>
-
-<div class="notification" id="notification"><i class="fas fa-check-circle"></i><span id="notificationText"></span></div>
+  </div>
 
 <script>
-let allConfigs=[],currentPage=1,configsPerPage=20;
-let geoCache={}; // ذخیره GeoIP
+/* ======== تنظیمات ======== */
+const CONFIG_URLS = [
+  "https://raw.githubusercontent.com/miladtahanian/multi-proxy-config-fetcher/refs/heads/main/configs/proxy_configs.txt",
+  "https://raw.githubusercontent.com/miladtahanian/V2RayCFGDumper/refs/heads/main/config.txt",
+  "https://raw.githubusercontent.com/10ium/V2Hub3/refs/heads/main/merged",
+  "https://raw.githubusercontent.com/ALIILAPRO/v2rayNG-Config/main/sub.txt",
+  "https://raw.githubusercontent.com/mfuu/v2ray/master/v2ray",
+  "https://raw.githubusercontent.com/ts-sf/fly/main/v2",
+  "https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2",
+  "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt",
+  "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/EternityAir.txt",
+  "https://raw.githubusercontent.com/mahdibland/SSAggregator/master/sub/sub_merge.txt",
+  "https://raw.githubusercontent.com/roosterkid/openproxylist/refs/heads/main/V2RAY_RAW.txt",
+  "https://raw.githubusercontent.com/MhdiTaheri/V2rayCollector/main/sub/mix",
+  "https://raw.githubusercontent.com/barry-far/V2ray-config/main/All_Configs_base64_Sub.txt",
+  "https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/refs/heads/main/app/sub.txt",
+  "https://raw.githubusercontent.com/LalatinaHub/Mineral/refs/heads/master/result/nodes",
+  "https://raw.githubusercontent.com/mheidari98/.proxy/refs/heads/main/all",
+  "https://raw.githubusercontent.com/miladtahanian/V2RayScrapeByCountry/refs/heads/main/output_configs/Tuic.txt",
+  "https://raw.githubusercontent.com/Argh94/V2Ray-Vault/refs/heads/main/data/sub/protocols/hysteria2.txt",
+  "https://raw.githubusercontent.com/10ium/V2ray-Config/refs/heads/main/Splitted-By-Protocol/hysteria2.txt",
+  "https://raw.githubusercontent.com/10ium/V2ray-Config/refs/heads/main/Splitted-By-Protocol/tuic.txt",
+  "https://raw.githubusercontent.com/dream4network/telegram-configs-collector/refs/heads/main/protocols/hysteria",
+  "https://raw.githubusercontent.com/MahsaNetConfigTopic/config/refs/heads/main/xray_final.txt",
+  "https://raw.githubusercontent.com/roosterkid/openproxylist/refs/heads/main/V2RAY.txt",
+  "https://raw.githubusercontent.com/free-nodes/v2rayfree/refs/heads/main/v2",
+  "https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/all_extracted_configs.txt"
+];
 
-function showNotification(msg){
-    const n=document.getElementById('notification');
-    document.getElementById('notificationText').textContent=msg;
-    n.classList.add('show');
-    setTimeout(()=>{n.classList.remove('show');},3000);
-}
-function copyToClipboard(text){
-    navigator.clipboard.writeText(text).then(()=>{showNotification('متن با موفقیت کپی شد!');})
-    .catch(()=>{showNotification('خطا در کپی متن!');});
+const PAGE_SIZE = 20;
+const DNS_CACHE_KEY = "dnsCacheV2";
+const GEO_CACHE_KEY = "geoCacheV2";
+
+/* ======== کش‌های محلی ======== */
+let dnsCache = JSON.parse(localStorage.getItem(DNS_CACHE_KEY) || "{}");
+let geoCache = JSON.parse(localStorage.getItem(GEO_CACHE_KEY) || "{}");
+
+/* ======== داده‌های داخلی ======== */
+let configs = []; // هر کانفیگ: {id, protocol, raw, host, ip, country}
+let currentPage = 1;
+
+/* ======== کمک-توابع ======== */
+
+// split entries into blocks (handle multi-line wg blocks)
+function splitEntries(text){
+  // جداکننده بلوک: حداقل یک خط خالی
+  return text.split(/\r?\n\s*\r?\n+/).map(s=>s.trim()).filter(s=>s.length>0);
 }
 
-// تابع دریافت GeoIP ساده با API رایگان
-async function getCountry(ip){
-    if(!ip) return "نامشخص";
-    if(geoCache[ip]) return geoCache[ip];
+// robust host extraction
+function extractHostFromText(s){
+  // 1) vmess://base64json
+  let m = s.match(/vmess:\/\/([A-Za-z0-9+\/=]+)/i);
+  if(m){
     try{
-        const res=await fetch(`https://ipapi.co/${ip}/country_name/`);
-        if(res.ok){const country=await res.text(); geoCache[ip]=country; return country;}
+      const json = atob(m[1]);
+      const obj = JSON.parse(json);
+      if(obj.add) return obj.add;
+      if(obj.host) return obj.host;
     }catch(e){}
-    return "نامشخص";
+  }
+  // 2) vless://uuid@host:port or trojan://pwd@host:port
+  m = s.match(/@([\w\.-]+):\d+/);
+  if(m) return m[1];
+  // 3) hysteria may include host after @ or in params
+  m = s.match(/hysteria:\/\/[^\s@]*@?([\w\.-]+):\d+/i);
+  if(m) return m[1];
+  // 4) wg Endpoint= or Endpoint =
+  m = s.match(/Endpoint\s*=\s*([\w\.-]+):\d+/i);
+  if(m) return m[1];
+  // 5) try to find first IPv4
+  m = s.match(/((?:\d{1,3}\.){3}\d{1,3})/);
+  if(m) return m[1];
+  // 6) find domain-like token
+  m = s.match(/([a-z0-9\.-]+\.[a-z]{2,})/i);
+  if(m) return m[1];
+  return null;
 }
 
-// parse کانفیگ‌ها
-function parseConfigs(text){
-    const configs=[];
-    const lines=text.split('\n');
-    const patterns=[
-        {regex:/vmess:\/\/([^\s]+)/gi,type:'vmess'},
-        {regex:/vless:\/\/([^\s]+)/gi,type:'vless'},
-        {regex:/trojan:\/\/([^\s]+)/gi,type:'trojan'},
-        {regex:/hysteria2?:\/\/([^\s]+)/gi,type:'hysteria'},
-        {regex:/wg:\/\/([^\s]+)/gi,type:'wireguard'},
-        {regex:/ss:\/\/([^\s]+)/gi,type:'shadowsocks'}
+// detect protocol for a block/line (includes wireguard blocks)
+function detectProtocol(entry){
+  const s = entry.toLowerCase();
+  if(/vmess:\/\//.test(s)) return "vmess";
+  if(/vless:\/\//.test(s)) return "vless";
+  if(/trojan:\/\//.test(s)) return "trojan";
+  if(/hysteria2?:\/\//.test(s)) return "hysteria";
+  if(/(^|\n)\[interface\]/i.test(entry) || /wg:\/\//i.test(entry) || /privatekey=/i.test(s) && /endpoint=/i.test(s)) return "wireguard";
+  if(/(^|\s)ss:\/\//.test(s) || /shadowsocks/i.test(s)) return "shadowsocks";
+  if(/tuic:\/\//.test(s)) return "tuic";
+  return null;
+}
+
+// DNS-over-HTTPS via Google to resolve domain -> IP
+async function resolveDNS(host){
+  if(!host) return null;
+  if(/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) return host; // already IP
+  if(dnsCache[host]) return dnsCache[host];
+  try{
+    const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(host)}&type=A`);
+    if(!res.ok) throw new Error("dns failed");
+    const j = await res.json();
+    if(j.Answer && j.Answer.length){
+      const ans = j.Answer.find(a=>/\d+\.\d+\.\d+\.\d+/.test(a.data));
+      if(ans && ans.data){
+        dnsCache[host] = ans.data;
+        localStorage.setItem(DNS_CACHE_KEY, JSON.stringify(dnsCache));
+        return ans.data;
+      }
+    }
+  }catch(e){
+    // ignore
+  }
+  return null;
+}
+
+// get country for an IP (cached)
+async function getCountryForIP(ip){
+  if(!ip) return "نامشخص";
+  if(geoCache[ip]) return geoCache[ip];
+  try{
+    // use ipapi.co simple text endpoint to reduce JSON parse
+    const res = await fetch(`https://ipapi.co/${ip}/country_name/`);
+    if(res.ok){
+      const country = (await res.text()).trim();
+      geoCache[ip] = country || "نامشخص";
+      localStorage.setItem(GEO_CACHE_KEY, JSON.stringify(geoCache));
+      return geoCache[ip];
+    }
+  }catch(e){}
+  return "نامشخص";
+}
+
+// concurrency batch processor
+async function processInBatches(items, worker, concurrency=5){
+  const results = [];
+  let idx = 0;
+  async function next(){
+    if(idx >= items.length) return;
+    const i = idx++;
+    try{ results[i] = await worker(items[i], i); }catch(e){ results[i] = null; }
+    return next();
+  }
+  const runners = [];
+  for(let i=0;i<concurrency;i++) runners.push(next());
+  await Promise.all(runners);
+  return results;
+}
+
+/* ======== parsing main ======== */
+
+function parseAllTextToConfigs(text){
+  const entries = splitEntries(text);
+  const out = [];
+  let id = 1;
+  for(const e of entries){
+    // within entry, there can be multiple single-line links too; extract those first
+    const linkMatches = [];
+    const singleRegexes = [
+      /vmess:\/\/[^\s'"]+/gi,
+      /vless:\/\/[^\s'"]+/gi,
+      /trojan:\/\/[^\s'"]+/gi,
+      /hysteria2?:\/\/[^\s'"]+/gi,
+      /wg:\/\/[^\s'"]+/gi,
+      /tuic:\/\/[^\s'"]+/gi,
+      /ss:\/\/[^\s'"]+/gi
     ];
-    lines.forEach(line=>{
-        line=line.trim();
-        patterns.forEach(p=>{
-            let m;
-            while((m=p.regex.exec(line))!==null){
-                configs.push({protocol:p.type,link:m[0],raw:line});
-            }
-        });
+    for(const r of singleRegexes){
+      let m;
+      while((m = r.exec(e)) !== null){
+        linkMatches.push(m[0]);
+      }
+    }
+
+    // push single-line links as separate configs
+    for(const lm of linkMatches){
+      const proto = detectProtocol(lm) || 'unknown';
+      out.push({ id: id++, protocol: proto, raw: lm, host: extractHostFromText(lm), ip: null, country: "در حال دریافت..." });
+    }
+
+    // if no single-line links found inside entry, treat whole entry as block (for wg multi-line etc)
+    if(linkMatches.length === 0){
+      const proto = detectProtocol(e) || 'unknown';
+      out.push({ id: id++, protocol: proto, raw: e, host: extractHostFromText(e), ip: null, country: "در حال دریافت..." });
+    }
+  }
+  return out;
+}
+
+/* ======== نمایش UI ======== */
+
+function updateStatsUI(){
+  document.getElementById('totalN').textContent = configs.length;
+  document.getElementById('vmessN').textContent = configs.filter(c=>c.protocol==='vmess').length;
+  document.getElementById('vlessN').textContent = configs.filter(c=>c.protocol==='vless').length;
+  document.getElementById('trojanN').textContent = configs.filter(c=>c.protocol==='trojan').length;
+  document.getElementById('hysteriaN').textContent = configs.filter(c=>c.protocol==='hysteria').length;
+  document.getElementById('wgN').textContent = configs.filter(c=>c.protocol==='wireguard').length;
+  document.getElementById('ssN').textContent = configs.filter(c=>c.protocol==='shadowsocks').length;
+  document.getElementById('cacheInfo').textContent = `${Object.keys(geoCache).length} geo, ${Object.keys(dnsCache).length} dns`;
+}
+
+function renderPage(){
+  const prot = document.getElementById('protocolFilter').value;
+  const country = document.getElementById('countryFilter').value;
+  let filtered = configs.filter(c => (prot==='all' || c.protocol===prot) && (country==='all' || c.country===country));
+  const total = filtered.length;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if(currentPage > pages) currentPage = 1;
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+  const container = document.getElementById('configs');
+  container.innerHTML = "";
+  if(pageItems.length === 0){
+    container.innerHTML = `<div class="loading">هیچ کانفیگی برای نمایش وجود ندارد</div>`;
+  } else {
+    for(const c of pageItems){
+      const card = document.createElement('div');
+      card.className = 'card';
+      const head = document.createElement('div'); head.className='head';
+      const title = document.createElement('h4'); title.textContent = (c.protocol || 'unknown').toUpperCase();
+      const small = document.createElement('div'); small.className='small meta'; small.textContent = `IP/Host: ${c.host || 'نامشخص'}`;
+      head.appendChild(title);
+      head.appendChild(small);
+      const rawP = document.createElement('div'); rawP.className='meta'; rawP.style.whiteSpace='pre-wrap';
+      rawP.textContent = c.raw.length > 300 ? c.raw.substring(0,300) + ' ...' : c.raw;
+      const countryP = document.createElement('div'); countryP.className='meta'; countryP.textContent = `کشور: ${c.country || 'نامشخص'}`;
+      countryP.setAttribute('data-id','country-'+c.id);
+
+      const actions = document.createElement('div'); actions.className='actions';
+      const btnCopy = document.createElement('button'); btnCopy.className='btn copy'; btnCopy.textContent='کپی';
+      btnCopy.onclick = ()=>{ navigator.clipboard.writeText(c.raw).then(()=>notify('کپی شد ✅')).catch(()=>notify('خطا در کپی ⚠️')) };
+      actions.appendChild(btnCopy);
+
+      const btnOpen = document.createElement('button'); btnOpen.className='btn open'; btnOpen.textContent='کپی لینک';
+      btnOpen.onclick = ()=>{ navigator.clipboard.writeText(c.raw).then(()=>notify('لینک/بلوک کپی شد ✅')) };
+      actions.appendChild(btnOpen);
+
+      card.appendChild(head);
+      card.appendChild(rawP);
+      card.appendChild(countryP);
+      card.appendChild(actions);
+      container.appendChild(card);
+    }
+  }
+
+  // pagination
+  const pag = document.getElementById('pagination');
+  pag.innerHTML = '';
+  const pagesToRender = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if(pagesToRender > 1){
+    for(let i=1;i<=pagesToRender;i++){
+      const b = document.createElement('button'); b.className='pg' + (i===currentPage ? ' active' : '');
+      b.textContent = i;
+      b.onclick = ()=>{ currentPage = i; renderPage(); };
+      pag.appendChild(b);
+    }
+  }
+  updateStatsUI();
+}
+
+/* ======== GeoIP & DNS flow ======== */
+
+// main function to update host/ip/country for configs (batched)
+async function fillCountriesForAll(){
+  // collect unique hosts (not null)
+  const hosts = Array.from(new Set(configs.map(c=>c.host).filter(h=>h && h!=='null')));
+  // process in batches: resolve DNS then GeoIP
+  await processInBatches(hosts, async (host)=>{
+    // resolve DNS if not IP
+    let ip = null;
+    if(/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) ip = host;
+    else ip = await resolveDNS(host);
+    if(!ip){
+      // if cannot resolve, set country for items with this host to نامشخص
+      configs.filter(c=>c.host===host).forEach(cc=>{ cc.ip = null; cc.country = 'نامشخص'; updateCardCountry(cc); });
+      return;
+    }
+    // get country
+    const country = await getCountryForIP(ip);
+    // update matching configs
+    configs.filter(c=>c.host===host).forEach(cc=>{
+      cc.ip = ip; cc.country = country;
+      updateCardCountry(cc);
     });
-    return configs;
+    // small delay to avoid hammering API too fast
+    await new Promise(r=>setTimeout(r, 150));
+  }, 6); // concurrency 6
+
+  // after fill, refresh country filter options
+  populateCountryFilter();
+  updateStatsUI();
 }
 
-// آمار
-function updateStats(){
-    document.getElementById('totalConfigs').textContent=allConfigs.length;
-    document.getElementById('vmessCount').textContent=allConfigs.filter(c=>c.protocol==='vmess').length;
-    document.getElementById('vlessCount').textContent=allConfigs.filter(c=>c.protocol==='vless').length;
-    document.getElementById('trojanCount').textContent=allConfigs.filter(c=>c.protocol==='trojan').length;
-    document.getElementById('hysteriaCount').textContent=allConfigs.filter(c=>c.protocol==='hysteria').length;
-    document.getElementById('wireguardCount').textContent=allConfigs.filter(c=>c.protocol==='wireguard').length;
-    document.getElementById('ssCount').textContent=allConfigs.filter(c=>c.protocol==='shadowsocks').length;
+// update single card country text (if visible)
+function updateCardCountry(cfg){
+  const el = document.querySelector(`[data-id="country-${cfg.id}"]`);
+  if(el) el.textContent = `کشور: ${cfg.country || 'نامشخص'}`;
 }
 
-// رندر صفحه
-async function renderConfigs(){
-    const protocolFilter=document.getElementById('protocolFilter').value;
-    const countryFilter=document.getElementById('countryFilter').value;
-    let filtered=allConfigs;
-    if(protocolFilter!=='all') filtered=filtered.filter(c=>c.protocol===protocolFilter);
-    if(countryFilter!=='all') filtered=filtered.filter(c=>c.country===countryFilter);
+/* ======== utility UI ======== */
 
-    const totalPages=Math.ceil(filtered.length/configsPerPage);
-    if(currentPage>totalPages) currentPage=1;
-    const start=(currentPage-1)*configsPerPage;
-    const pageConfigs=filtered.slice(start,start+configsPerPage);
-
-    const container=document.getElementById('configsContainer');
-    if(pageConfigs.length===0){
-        container.innerHTML=`<div style="text-align:center;padding:40px;color:#aaa;"><i class="fas fa-info-circle" style="font-size:3rem;"></i><p>هیچ کانفیگی یافت نشد</p></div>`;
-        document.getElementById('pagination').innerHTML='';
-        return;
-    }
-
-    let html='<div class="configs-list">';
-    for(const cfg of pageConfigs){
-        const shortLink=cfg.link.length>60?cfg.link.substr(0,60)+'...':cfg.link;
-        const protocolClass='protocol-'+cfg.protocol;
-        const country=cfg.country||"در حال دریافت...";
-        html+=`
-        <div class="config-card">
-            <span class="protocol-badge ${protocolClass}">${cfg.protocol.toUpperCase()}</span>
-            <div class="config-info">
-                <p><i class="fas fa-link"></i> ${shortLink}</p>
-                <p><i class="fas fa-globe"></i> ${country}</p>
-            </div>
-            <div class="config-actions">
-                <button onclick="copyToClipboard('${cfg.link.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i> کپی</button>
-            </div>
-        </div>`;
-    }
-    html+='</div>';
-    container.innerHTML=html;
-
-    // صفحه‌بندی
-    let pagHtml='';
-    for(let i=1;i<=totalPages;i++){
-        pagHtml+=`<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
-    }
-    document.getElementById('pagination').innerHTML=pagHtml;
+function notify(text){ 
+  const n = document.getElementById('notification');
+  if(!n){ // create
+    const el = document.createElement('div');
+    el.id='notification'; el.style.position='fixed'; el.style.bottom='18px'; el.style.left='50%';
+    el.style.transform='translateX(-50%)'; el.style.background='rgba(0,0,0,0.6)'; el.style.color='#fff';
+    el.style.padding='10px 14px'; el.style.borderRadius='8px'; document.body.appendChild(el);
+    el.textContent = text;
+    setTimeout(()=>el.remove(),2800);
+  } else {
+    n.textContent = text;
+    setTimeout(()=>n.remove(),2800);
+  }
 }
 
-// تغییر صفحه
-function goPage(n){currentPage=n;renderConfigs();}
-
-// کپی همه
-function copyAllConfigs(){
-    if(allConfigs.length===0){showNotification('هیچ کانفیگی وجود ندارد');return;}
-    const allLinks=allConfigs.map(c=>c.link).join('\n');
-    copyToClipboard(allLinks);
+function populateCountryFilter(){
+  const sel = document.getElementById('countryFilter');
+  const set = new Set(configs.map(c=>c.country).filter(Boolean));
+  const arr = Array.from(set).filter(x=>x && x !== 'در حال دریافت...' && x !== 'نامشخص').sort();
+  sel.innerHTML = '<option value="all">همه کشورها</option>';
+  arr.forEach(a=>{
+    const o = document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o);
+  });
 }
 
-// بارگذاری کانفیگ‌ها
-async function loadConfigs(){
-    const container=document.getElementById('configsContainer');
-    container.innerHTML=`<div class="loading"><i class="fas fa-spinner"></i><p>در حال دریافت کانفیگ‌ها...</p></div>`;
-    try{
-        const urls=[
-            "https://raw.githubusercontent.com/miladtahanian/multi-proxy-config-fetcher/refs/heads/main/configs/proxy_configs.txt",
-            "https://raw.githubusercontent.com/miladtahanian/V2RayCFGDumper/refs/heads/main/config.txt",
-            "https://raw.githubusercontent.com/10ium/V2Hub3/refs/heads/main/merged"
-        ]; // اینجا میتونی بقیه لینک‌ها اضافه کنی
-
-        let texts='';
-        for(const u of urls){
-            const res=await fetch(u);
-            if(res.ok) texts+=await res.text()+'\n';
-        }
-
-        allConfigs=parseConfigs(texts);
-        // گرفتن لوکیشن همه کانفیگ‌ها
-        for(const cfg of allConfigs){
-            let ipMatch=cfg.link.match(/(\d{1,3}\.){3}\d{1,3}/);
-            const ip=ipMatch?ipMatch[0]:null;
-            cfg.country=await getCountry(ip);
-        }
-
-        // پر کردن لیست کشورها
-        const countries=[...new Set(allConfigs.map(c=>c.country))].sort();
-        const countryFilter=document.getElementById('countryFilter');
-        countryFilter.innerHTML='<option value="all">همه کشورها</option>';
-        countries.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;countryFilter.appendChild(o);});
-
-        updateStats();
-        renderConfigs();
-        showNotification(`تعداد ${allConfigs.length} کانفیگ دریافت شد ✅`);
-
-    }catch(e){
-        console.error(e);
-        container.innerHTML=`<div style="text-align:center;padding:40px;color:#f00;"><i class="fas fa-exclamation-triangle" style="font-size:3rem;"></i><p>خطا در دریافت کانفیگ‌ها</p></div>`;
-        showNotification('⚠️ خطا در دریافت کانفیگ‌ها');
-    }
+/* ======== main loader ======== */
+async function loadAllConfigs(){
+  const container = document.getElementById('configs');
+  document.getElementById('loader')?.remove();
+  container.innerHTML = '<div class="loading">⏳ دانلود منابع ...</div>';
+  // fetch all texts in parallel (silently ignore failures)
+  const fetches = CONFIG_URLS.map(u => fetch(u).then(r => r.ok ? r.text() : '').catch(()=>''));
+  const results = await Promise.all(fetches);
+  const bigText = results.join('\n\n');
+  // parse into configs
+  configs = parseAllTextToConfigs(bigText);
+  // set placeholders and get initial host field already set by parser
+  currentPage = 1;
+  renderPage();
+  // fill countries async in background (batches, caching)
+  fillCountriesForAll();
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-    loadConfigs();
-    document.getElementById('protocolFilter').addEventListener('change',()=>{currentPage=1;renderConfigs();});
-    document.getElementById('countryFilter').addEventListener('change',()=>{currentPage=1;renderConfigs();});
+/* ======== events ======== */
+document.getElementById('btnReload').addEventListener('click', async ()=>{
+  // reset caches? keep caches but reload
+  document.getElementById('configs').innerHTML = '<div class="loading">⏳ در حال بروزرسانی ...</div>';
+  await loadAllConfigs();
 });
+
+document.getElementById('protocolFilter').addEventListener('change', ()=>{ currentPage = 1; renderPage(); });
+document.getElementById('countryFilter').addEventListener('change', ()=>{ currentPage = 1; renderPage(); });
+
+/* ======== startup ======== */
+loadAllConfigs();
+
 </script>
 </body>
 </html>
